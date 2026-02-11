@@ -3,222 +3,118 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Checklist + Roadmap SEO (RadioShack)</title>
+  <title>RSO Control Tower: Checklist + Ownership + Roadmap</title>
   <link rel="stylesheet" href="./assets/styles.css" />
 </head>
 
 <body>
   <div class="wrap">
-    <h1>Checklist de insumos + Roadmap M27 (RadioShack)</h1>
-    <p class="hint">
-      Versión “desktop-first”: ancho mínimo 1600px para evitar apelmazar. Si tu pantalla es menor, aparece scroll horizontal.
-      El flujo está diseñado izquierda → derecha y las flechas se recalculan automáticamente.
-    </p>
+    <header class="top">
+      <div>
+        <h1>RSO Control Tower — RadioShack SEO M27</h1>
+        <p class="sub">
+          Vista ejecutiva y operativa: <b>Checklist (DoR)</b> → <b>SERP Ownership (RS vs LCO)</b> → <b>Roadmap por workstreams</b>.
+        </p>
+      </div>
 
-    <!-- CHECKLIST -->
-    <div class="board">
-      <div class="diagram" id="checklistDiagram">
-        <div class="titlebar">
+      <div class="actions">
+        <button id="btnReset" class="btn ghost">Reset</button>
+        <button onclick="window.print()" class="btn">Imprimir / PDF</button>
+      </div>
+    </header>
+
+    <section class="grid">
+      <!-- PANEL A: CHECKLIST / GATES -->
+      <div class="panel">
+        <div class="panelHead">
           <div>
-            <div class="t">Checklist de insumos antes de arrancar estrategia SEO →</div>
-            <div class="s">Gate 0 (inputs) → Gate 1 (SERP Ownership) → Gate 2 (Backlog listo)</div>
+            <div class="panelTitle">1) Checklist de insumos (Definition of Ready)</div>
+            <div class="panelHint">Marca los insumos recibidos. Los gates se calculan solos.</div>
           </div>
-          <div class="legend">
-            <span><span class="dot yes"></span> Sí</span>
-            <span><span class="dot no"></span> No</span>
-            <span><span class="dot neu"></span> Flujo</span>
+          <div class="chips">
+            <span class="chip" id="gate0">Gate 0</span>
+            <span class="chip" id="gate1">Gate 1</span>
+            <span class="chip" id="gate2">Gate 2</span>
           </div>
         </div>
 
-        <div class="stage" id="checklistStage">
-          <div class="lanes">
-            <div class="lane"><div class="lane-head">Equipo Analítica / SEO (orquesta)</div></div>
-            <div class="lane"><div class="lane-head">Marketing</div></div>
-            <div class="lane"><div class="lane-head">Comercial</div></div>
-            <div class="lane"><div class="lane-head">Catálogo / Merch + IT/Producto</div></div>
+        <div class="progress">
+          <div class="bar"><div id="progressBar" class="barFill"></div></div>
+          <div class="progressMeta">
+            <span id="progressText">0%</span>
+            <span class="muted">Completitud total</span>
           </div>
+        </div>
 
-          <svg class="svg-layer" id="checklistSvg"></svg>
+        <div id="checklistMount" class="checklist"></div>
 
-          <div class="nodes">
-            <!-- SEO -->
-            <div class="node seo pill" id="n_start" style="--x:20;--y:90;">
-              <div class="k"><span class="tag">0</span><div class="ttl">Solicitar insumos mínimos (DoR)</div></div>
-              <div class="sub">
-                Sin estos insumos, el roadmap se frena.
-              </div>
-            </div>
+        <div class="gatesBox">
+          <label class="toggleRow">
+            <input type="checkbox" id="ownershipApproved" />
+            <span><b>Aprobación Gate 1:</b> SERP Ownership validado por Comercial + Marketing</span>
+          </label>
 
-            <div class="node seo decision" id="d_inputs" style="--x:20;--y:200;">
-              ¿Insumos completos?
-            </div>
-
-            <div class="node seo" id="n_fix" style="--x:20;--y:300;">
-              <div class="k"><span class="tag">NO</span><div class="ttl">Cerrar brechas</div></div>
-              <ul>
-                <li>Solicitar faltantes</li>
-                <li>Alinear ownership RS vs LCO</li>
-                <li>Definir reglas de inventario → URLs</li>
-              </ul>
-            </div>
-
-            <div class="node seo" id="n_serp" style="--x:20;--y:420;">
-              <div class="k"><span class="tag">1</span><div class="ttl">Construir Matriz SERP Ownership</div></div>
-              <ul>
-                <li>Owner por cluster (RS / LCO)</li>
-                <li>Objetivo (Top 1/3/defender)</li>
-                <li>Landing objetivo + ángulo</li>
-              </ul>
-            </div>
-
-            <!-- Marketing -->
-            <div class="node mkt" id="n_mkt" style="--x:390;--y:120;">
-              <div class="k"><span class="tag">Marketing</span><div class="ttl">Base de marca</div></div>
-              <ul>
-                <li>Posicionamiento (1 frase + 3 proof points)</li>
-                <li>User persona (2–3 perfiles)</li>
-                <li>Tono/voz (sí/no + ejemplos)</li>
-                <li>Calendario M27 (macro campañas)</li>
-              </ul>
-            </div>
-
-            <!-- Comercial -->
-            <div class="node com" id="n_com" style="--x:820;--y:120;">
-              <div class="k"><span class="tag">Comercial</span><div class="ttl">Prioridades RS vs LCO</div></div>
-              <ul>
-                <li>Ownership por categoría/marca</li>
-                <li>Metas SEO (Top 1/Top 3/defender)</li>
-                <li>Marcas foco (ej. TVs: TCL/Sony en RS)</li>
-                <li>Restricciones (lo que NO se empuja)</li>
-              </ul>
-            </div>
-
-            <!-- Catálogo -->
-            <div class="node cat" id="n_cat" style="--x:1240;--y:100;">
-              <div class="k"><span class="tag">Catálogo</span><div class="ttl">Inventario + reglas</div></div>
-              <ul>
-                <li>Inventario actual por categoría/marca</li>
-                <li>Forecast 3–6 meses</li>
-                <li>Descontinuados + reemplazos (redirect/pruning)</li>
-              </ul>
-            </div>
-
-            <div class="node it" id="n_it" style="--x:1240;--y:290;">
-              <div class="k"><span class="tag">IT/Producto</span><div class="ttl">Capacidades + releases</div></div>
-              <ul>
-                <li>PLP/PDP/filtros/módulos (sí/no)</li>
-                <li>Ventanas de despliegue + responsables</li>
-              </ul>
-            </div>
-
-            <!-- Gate aprobación -->
-            <div class="node seo decision" id="d_approve" style="--x:520;--y:420;">
-              ¿SERP Ownership aprobada (Comercial + Marketing)?
-            </div>
-
-            <div class="node seo" id="n_adjust" style="--x:520;--y:310;">
-              <div class="k"><span class="tag">NO</span><div class="ttl">Ajustar y revalidar</div></div>
-              <ul>
-                <li>Resolver canibalización RS vs LCO</li>
-                <li>Repriorizar categorías/marcas</li>
-              </ul>
-            </div>
-
-            <!-- Backlog + GO -->
-            <div class="node seo" id="n_ast" style="--x:920;--y:420;">
-              <div class="k"><span class="tag">2</span><div class="ttl">Mapa AST + Backlog listo</div></div>
-              <ul>
-                <li>Clusters transaccionales → landings</li>
-                <li>Pruning + reglas de indexación</li>
-                <li>Contenido “a prueba de inventario”</li>
-              </ul>
-            </div>
-
-            <div class="node seo pill" id="n_go" style="--x:1240;--y:440;">
-              <div class="k center">
-                <span class="tag">GO</span>
-                <div class="ttl">Iniciar implementación (Q1 ES)</div>
-              </div>
-            </div>
-          </div>
+          <label class="toggleRow">
+            <input type="checkbox" id="backlogReady" />
+            <span><b>Aprobación Gate 2:</b> Backlog final priorizado (Impacto/Esfuerzo) + fechas acordadas</span>
+          </label>
         </div>
       </div>
-    </div>
 
-    <!-- ROADMAP -->
-    <div class="board">
-      <div class="diagram" id="roadmapDiagram">
-        <div class="titlebar">
+      <!-- PANEL B: SERP OWNERSHIP MAP -->
+      <div class="panel">
+        <div class="panelHead">
           <div>
-            <div class="t">Roadmap M27 (Abr 2026 – Mar 2027) → RadioShack El Salvador (piloto)</div>
-            <div class="s">Fase 0 → Q1 → Q2 → Q3 → Q4</div>
+            <div class="panelTitle">2) Mapa SERP Ownership (RS vs LCO)</div>
+            <div class="panelHint">Una tabla = una decisión. Evita canibalización y alinea prioridades.</div>
           </div>
-          <div class="s">Blueprint replicable a 7 países</div>
+          <div class="smallNote">Piloto: El Salvador</div>
         </div>
 
-        <div class="timeline-stage" id="roadmapStage">
-          <div class="timeline-grid">
-            <div class="timecell"><div class="timehead">Fase 0 (Mar 2026)</div></div>
-            <div class="timecell"><div class="timehead">Q1 (Abr–Jun 2026)</div></div>
-            <div class="timecell"><div class="timehead">Q2 (Jul–Sep 2026)</div></div>
-            <div class="timecell"><div class="timehead">Q3 (Oct–Dic 2026)</div></div>
-            <div class="timecell"><div class="timehead">Q4 (Ene–Mar 2027)</div></div>
-          </div>
+        <div class="tableWrap">
+          <table class="ownTable" id="ownTable">
+            <thead>
+              <tr>
+                <th>Categoría</th>
+                <th>Owner</th>
+                <th>Marcas foco RadioShack</th>
+                <th>Marcas foco LCO</th>
+                <th>Meta</th>
+              </tr>
+            </thead>
+            <tbody id="ownBody"></tbody>
+          </table>
+        </div>
 
-          <svg class="svg-layer" id="roadmapSvg"></svg>
-
-          <div class="nodes">
-            <div class="node seo tl" id="r0" style="--x:40;--y:80;">
-              <div class="k"><span class="tag">Fase 0</span><div class="ttl">Alineación + diseño</div></div>
-              <ul>
-                <li>SERP Ownership aprobado (RS vs LCO)</li>
-                <li>Mapa AST v1 (20–40 clusters ES)</li>
-                <li>Política URLs (pruning/redirect/index)</li>
-                <li>Baseline KPI (GSC + Adobe/GA)</li>
-              </ul>
-            </div>
-
-            <div class="node seo tl" id="r1" style="--x:360;--y:80;">
-              <div class="k"><span class="tag">Q1</span><div class="ttl">Fundación (ES)</div></div>
-              <ul>
-                <li>Backlinks tóxicos: cleanup + disavow</li>
-                <li>Pruning URLs sin producto + reglas index</li>
-                <li>10–15 landings AST</li>
-                <li>6–8 contenidos evergreen</li>
-              </ul>
-            </div>
-
-            <div class="node seo tl" id="r2" style="--x:680;--y:80;">
-              <div class="k"><span class="tag">Q2</span><div class="ttl">Escala controlada</div></div>
-              <ul>
-                <li>Replicar en 2 países (mayor upside)</li>
-                <li>AST a 60–80 clusters por país</li>
-                <li>Estandarizar gobernanza + plantillas</li>
-              </ul>
-            </div>
-
-            <div class="node seo tl" id="r3" style="--x:1000;--y:80;">
-              <div class="k"><span class="tag">Q3</span><div class="ttl">Peak season</div></div>
-              <ul>
-                <li>Hubs estacionales (BF/Cyber)</li>
-                <li>Defensa vs LCO (ajustes ownership)</li>
-                <li>Monitoreo clusters críticos</li>
-              </ul>
-            </div>
-
-            <div class="node seo tl" id="r4" style="--x:1320;--y:80;">
-              <div class="k"><span class="tag">Q4</span><div class="ttl">Consolidación</div></div>
-              <ul>
-                <li>Refresh contenidos top</li>
-                <li>Limpieza anual (URLs nuevas muertas)</li>
-                <li>Plan M28 (winners/losers)</li>
-              </ul>
-            </div>
-          </div>
+        <div class="muted foot">
+          Tip: si una categoría es “Compartido”, definí roles distintos (ej. RS = “gaming/audio experto”, LCO = “variedad/precio”).
         </div>
       </div>
-    </div>
 
+      <!-- PANEL C: ROADMAP -->
+      <div class="panel span2">
+        <div class="panelHead">
+          <div>
+            <div class="panelTitle">3) Roadmap M27 por workstreams</div>
+            <div class="panelHint">Timeline por trimestres, pero ejecutable (sin flechas). Cambiá textos según país.</div>
+          </div>
+          <div class="smallNote">Abr 2026 – Mar 2027</div>
+        </div>
+
+        <div class="roadmap">
+          <div class="rmHeader">
+            <div></div>
+            <div class="q">Fase 0<br><span>Mar</span></div>
+            <div class="q">Q1<br><span>Abr–Jun</span></div>
+            <div class="q">Q2<br><span>Jul–Sep</span></div>
+            <div class="q">Q3<br><span>Oct–Dic</span></div>
+            <div class="q">Q4<br><span>Ene–Mar</span></div>
+          </div>
+
+          <div id="rmBody" class="rmBody"></div>
+        </div>
+      </div>
+    </section>
   </div>
 
   <script src="./assets/app.js"></script>
