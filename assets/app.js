@@ -1,3 +1,25 @@
+// Tabs logic
+(function initTabs(){
+  const tabs = Array.from(document.querySelectorAll(".tab"));
+  const panels = Array.from(document.querySelectorAll(".tabPanel"));
+  const key = "rso_active_tab";
+
+  function setActive(id){
+    tabs.forEach(t => {
+      const on = t.dataset.tab === id;
+      t.classList.toggle("is-active", on);
+      t.setAttribute("aria-selected", on ? "true" : "false");
+    });
+    panels.forEach(p => p.classList.toggle("is-active", p.id === id));
+    localStorage.setItem(key, id);
+  }
+
+  tabs.forEach(t => t.addEventListener("click", () => setActive(t.dataset.tab)));
+
+  const saved = localStorage.getItem(key);
+  setActive(saved && document.getElementById(saved) ? saved : "tab_inputs");
+})();
+
 const STORAGE_KEY = "rso_control_tower_v1";
 
 /** ====== DATA ====== */
