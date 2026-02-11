@@ -1,185 +1,340 @@
-// ======= SVG arrows (curved) =======
-function makeSVG(svgEl){
-  while(svgEl.firstChild) svgEl.removeChild(svgEl.firstChild);
+const STORAGE_KEY = "rso_control_tower_v1";
 
-  const parent = svgEl.parentElement;
-  const r = parent.getBoundingClientRect();
-  svgEl.setAttribute("width", r.width);
-  svgEl.setAttribute("height", r.height);
-  svgEl.setAttribute("viewBox", `0 0 ${r.width} ${r.height}`);
-
-  const defs = document.createElementNS("http://www.w3.org/2000/svg","defs");
-
-  function marker(id, color){
-    const m = document.createElementNS("http://www.w3.org/2000/svg","marker");
-    m.setAttribute("id", id);
-    m.setAttribute("markerWidth","10");
-    m.setAttribute("markerHeight","10");
-    m.setAttribute("refX","9");
-    m.setAttribute("refY","3");
-    m.setAttribute("orient","auto");
-    m.setAttribute("markerUnits","strokeWidth");
-    const p = document.createElementNS("http://www.w3.org/2000/svg","path");
-    p.setAttribute("d","M0,0 L10,3 L0,6 Z");
-    p.setAttribute("fill", color);
-    m.appendChild(p);
-    defs.appendChild(m);
+/** ====== DATA ====== */
+const checklistData = [
+  {
+    team: "Marketing",
+    mustHave: 3,
+    items: [
+      { id:"m_pos", label:"Posicionamiento (1 frase + 3 proof points)", required:true },
+      { id:"m_bp",  label:"Buyer persona (2–3 perfiles con pains/objeciones)", required:true },
+      { id:"m_tono",label:"Tono/voz (sí/no + 5 ejemplos)", required:true },
+      { id:"m_cal", label:"Calendario M27 (macro campañas/temporadas)", required:false },
+    ]
+  },
+  {
+    team: "Comercial",
+    mustHave: 3,
+    items: [
+      { id:"c_own", label:"Prioridad RS vs LCO por categoría/marca (ownership)", required:true },
+      { id:"c_meta",label:"Metas SEO por cluster (Top 1 / Top 3 / defender)", required:true },
+      { id:"c_brand",label:"Marcas foco por categoría (ej. TVs RS: TCL/Sony)", required:true },
+      { id:"c_rest",label:"Restricciones (qué NO se empuja)", required:false },
+    ]
+  },
+  {
+    team: "Catálogo / Merch",
+    mustHave: 2,
+    items: [
+      { id:"k_inv", label:"Inventario actual por categoría/marca", required:true },
+      { id:"k_fore",label:"Forecast 3–6 meses (stock esperado)", required:true },
+      { id:"k_disc",label:"Reglas de descontinuados + reemplazos (redirect/pruning)", required:false },
+    ]
+  },
+  {
+    team: "IT / Producto",
+    mustHave: 1,
+    items: [
+      { id:"i_cap", label:"Capacidades (PLP/PDP/filtros/módulos) + límites", required:true },
+      { id:"i_rel", label:"Ventanas de release + responsables", required:false },
+    ]
+  },
+  {
+    team: "SEO / Analítica (interno)",
+    mustHave: 3,
+    items: [
+      { id:"s_base",label:"Baseline KPI (GSC + Adobe/GA) y segmentación", required:true },
+      { id:"s_ast", label:"Mapa AST v1 (clusters → landings)", required:true },
+      { id:"s_policy",label:"Política URLs (pruning/redirect/index rules)", required:true },
+      { id:"s_back",label:"Plan backlinks tóxicos (si aplica en ES)", required:false },
+    ]
   }
+];
 
-  marker("arrowNeutral","rgba(255,255,255,.65)");
-  marker("arrowYes","rgba(34,197,94,.90)");
-  marker("arrowNo","rgba(239,68,68,.90)");
+const ownershipRows = [
+  { cat:"Televisores", owner:"RadioShack", rs:"TCL, Sony", lco:"Samsung, LG", goal:"Top 3" },
+  { cat:"Audio", owner:"RadioShack", rs:"JBL, Sony", lco:"Genérico", goal:"Top 3" },
+  { cat:"Consolas", owner:"RadioShack", rs:"PlayStation, Xbox", lco:"—", goal:"Top 1" },
+  { cat:"Celulares", owner:"LCO", rs:"Accesorios / gadgets", lco:"Samsung, Xiaomi, Apple", goal:"Top 1" },
+  { cat:"Accesorios", owner:"Compartido", rs:"Cables, cargadores, smartwatches", lco:"Accesorios masivos", goal:"Top 3" }
+];
 
-  svgEl.appendChild(defs);
+const roadmapRows = [
+  {
+    name:"Técnico (Higiene)",
+    cells:[
+      "Definir reglas URLs + plan backlinks",
+      "Cleanup backlinks + pruning URLs sin producto",
+      "Ajustes PLP indexación + monitoreo cobertura",
+      "Hardening para temporada alta",
+      "Limpieza anual + fixes recurrentes"
+    ]
+  },
+  {
+    name:"AST (Landings transacc.)",
+    cells:[
+      "Mapa AST v1 (20–40 clusters ES)",
+      "10–15 landings AST ES (marca/categoría/atributo)",
+      "Escala a 60–80 clusters en 2 países",
+      "Hubs BF/Cyber por marca/categoría",
+      "Consolidar winners + retirar losers"
+    ]
+  },
+  {
+    name:"Contenido evergreen",
+    cells:[
+      "Plan editorial “a prueba de inventario”",
+      "6–8 guías/comparativas (intención compra)",
+      "Replicar playbook en 2 países",
+      "Refrescar contenido para BF/Cyber",
+      "Refresh de top contenidos + nuevo backlog"
+    ]
+  },
+  {
+    name:"Autoridad / PR",
+    cells:[
+      "Lista partners potenciales",
+      "Primeras menciones/links de calidad",
+      "Escala de partnerships por país",
+      "Activaciones estacionales (si aplica)",
+      "Revisión perfil backlinks + continuidad"
+    ]
+  },
+  {
+    name:"Medición + reporting",
+    cells:[
+      "Tablero base ES + definición KPIs",
+      "Ritual MBR + SOV por cluster",
+      "Comparativo multi-país (2 países más)",
+      "Monitoreo diario clusters críticos",
+      "Informe cierre M27 + plan M28"
+    ]
+  }
+];
+
+/** ====== STATE ====== */
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : { checks:{}, ownershipApproved:false, backlogReady:false, ownership: ownershipRows };
+  }catch{
+    return { checks:{}, ownershipApproved:false, backlogReady:false, ownership: ownershipRows };
+  }
 }
-
-function anchorPoint(el, container, anchor){
-  const r = el.getBoundingClientRect();
-  const c = container.getBoundingClientRect();
-  const x0 = r.left - c.left;
-  const y0 = r.top - c.top;
-
-  const map = {
-    top:    {x: x0 + r.width/2, y: y0},
-    bottom: {x: x0 + r.width/2, y: y0 + r.height},
-    left:   {x: x0, y: y0 + r.height/2},
-    right:  {x: x0 + r.width, y: y0 + r.height/2},
-    center: {x: x0 + r.width/2, y: y0 + r.height/2},
-  };
-  return map[anchor] || map.right;
+function saveState(state){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
+let state = loadState();
 
-function drawCurve(svgEl, p1, p2, style){
-  const dx = Math.max(60, Math.abs(p2.x - p1.x) * 0.35);
-  const c1 = {x: p1.x + dx, y: p1.y};
-  const c2 = {x: p2.x - dx, y: p2.y};
+/** ====== RENDER CHECKLIST ====== */
+function renderChecklist(){
+  const mount = document.getElementById("checklistMount");
+  mount.innerHTML = "";
 
-  const d = `M ${p1.x} ${p1.y} C ${c1.x} ${c1.y}, ${c2.x} ${c2.y}, ${p2.x} ${p2.y}`;
-  const path = document.createElementNS("http://www.w3.org/2000/svg","path");
-  path.setAttribute("d", d);
-  path.setAttribute("fill","none");
-  path.setAttribute("stroke", style.stroke || "rgba(255,255,255,.55)");
-  path.setAttribute("stroke-width", style.width || "2.5");
-  path.setAttribute("stroke-linecap","round");
-  path.setAttribute("stroke-linejoin","round");
-  path.setAttribute("marker-end", `url(#${style.marker || "arrowNeutral"})`);
-  svgEl.appendChild(path);
-}
+  checklistData.forEach(section => {
+    const sec = document.createElement("div");
+    sec.className = "section";
 
-function label(svgEl, text, x, y, color){
-  const g = document.createElementNS("http://www.w3.org/2000/svg","g");
+    const head = document.createElement("div");
+    head.className = "sectionHead";
 
-  const rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
-  rect.setAttribute("x", x - 8);
-  rect.setAttribute("y", y - 14);
-  rect.setAttribute("width", (text.length * 7.2) + 14);
-  rect.setAttribute("height", 18);
-  rect.setAttribute("rx", 9);
-  rect.setAttribute("fill", "rgba(0,0,0,.35)");
-  rect.setAttribute("stroke", "rgba(255,255,255,.18)");
+    const ttl = document.createElement("div");
+    ttl.className = "sectionTitle";
+    ttl.textContent = section.team;
 
-  const t = document.createElementNS("http://www.w3.org/2000/svg","text");
-  t.textContent = text;
-  t.setAttribute("x", x);
-  t.setAttribute("y", y);
-  t.setAttribute("fill", color || "rgba(255,255,255,.8)");
-  t.setAttribute("font-size", "12");
-  t.setAttribute("font-weight", "900");
-  t.setAttribute("font-family", "ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial");
+    const badge = document.createElement("div");
+    badge.className = "badge";
+    badge.textContent = `Must-have: ${section.mustHave}`;
 
-  g.appendChild(rect);
-  g.appendChild(t);
-  svgEl.appendChild(g);
-}
+    head.appendChild(ttl);
+    head.appendChild(badge);
+    sec.appendChild(head);
 
-function renderConnections(diagramId, svgId, connections){
-  const diagram = document.getElementById(diagramId);
-  const stage = diagram.querySelector(".stage, .timeline-stage");
-  const svg = document.getElementById(svgId);
+    section.items.forEach(item => {
+      const row = document.createElement("div");
+      row.className = "item";
 
-  makeSVG(svg);
+      const cb = document.createElement("input");
+      cb.type = "checkbox";
+      cb.checked = !!state.checks[item.id];
+      cb.addEventListener("change", () => {
+        state.checks[item.id] = cb.checked;
+        saveState(state);
+        updateGatesAndProgress();
+      });
 
-  connections.forEach(conn => {
-    const from = document.getElementById(conn.from);
-    const to   = document.getElementById(conn.to);
-    if(!from || !to) return;
+      const label = document.createElement("label");
+      label.innerHTML = `${item.label} ${item.required ? '<span class="req">(requerido)</span>' : ''}`;
 
-    const p1 = anchorPoint(from, stage, conn.fromAnchor || "right");
-    const p2 = anchorPoint(to, stage, conn.toAnchor || "left");
+      row.appendChild(cb);
+      row.appendChild(label);
+      sec.appendChild(row);
+    });
 
-    const style = conn.style || {};
-    drawCurve(svg, p1, p2, style);
+    mount.appendChild(sec);
+  });
 
-    if(conn.text){
-      const lx = (p1.x + p2.x)/2 + (conn.dx || 0);
-      const ly = (p1.y + p2.y)/2 + (conn.dy || -8);
-      label(svg, conn.text, lx, ly, style.stroke);
-    }
+  // toggles
+  const ownCb = document.getElementById("ownershipApproved");
+  const backCb = document.getElementById("backlogReady");
+  ownCb.checked = !!state.ownershipApproved;
+  backCb.checked = !!state.backlogReady;
+
+  ownCb.addEventListener("change", () => {
+    state.ownershipApproved = ownCb.checked;
+    saveState(state);
+    updateGatesAndProgress();
+  });
+
+  backCb.addEventListener("change", () => {
+    state.backlogReady = backCb.checked;
+    saveState(state);
+    updateGatesAndProgress();
   });
 }
 
-// ======= Connections =======
-const checklistConnections = [
-  { from:"n_start", to:"n_mkt", fromAnchor:"right", toAnchor:"left" },
-  { from:"n_mkt", to:"n_com", fromAnchor:"right", toAnchor:"left" },
-  { from:"n_com", to:"n_cat", fromAnchor:"right", toAnchor:"left" },
-  { from:"n_cat", to:"n_it",  fromAnchor:"bottom", toAnchor:"top" },
+/** ====== OWNERSHIP TABLE ====== */
+function renderOwnership(){
+  const body = document.getElementById("ownBody");
+  body.innerHTML = "";
 
-  { from:"n_mkt", to:"d_inputs", fromAnchor:"left", toAnchor:"right" },
-  { from:"n_com", to:"d_inputs", fromAnchor:"left", toAnchor:"right" },
-  { from:"n_cat", to:"d_inputs", fromAnchor:"left", toAnchor:"right" },
-  { from:"n_it",  to:"d_inputs", fromAnchor:"left", toAnchor:"right" },
+  state.ownership.forEach((r, idx) => {
+    const tr = document.createElement("tr");
 
-  {
-    from:"d_inputs", to:"n_fix",
-    fromAnchor:"bottom", toAnchor:"top",
-    text:"NO", style:{ stroke:"rgba(239,68,68,.9)", marker:"arrowNo", width:"3" }, dy:-10
-  },
-  {
-    from:"n_fix", to:"n_start",
-    fromAnchor:"top", toAnchor:"left",
-    style:{ stroke:"rgba(239,68,68,.65)", marker:"arrowNo", width:"2.5" }
-  },
-  {
-    from:"d_inputs", to:"n_serp",
-    fromAnchor:"bottom", toAnchor:"top",
-    text:"SÍ", style:{ stroke:"rgba(34,197,94,.9)", marker:"arrowYes", width:"3" }, dy:-10
-  },
+    tr.appendChild(tdText(r.cat));
 
-  { from:"n_serp", to:"d_approve", fromAnchor:"right", toAnchor:"left" },
+    // owner select
+    const tdOwner = document.createElement("td");
+    const sel = document.createElement("select");
+    sel.className = "select";
+    ["RadioShack","LCO","Compartido"].forEach(opt => {
+      const o = document.createElement("option");
+      o.value = opt;
+      o.textContent = opt;
+      if(opt === r.owner) o.selected = true;
+      sel.appendChild(o);
+    });
+    sel.addEventListener("change", () => {
+      state.ownership[idx].owner = sel.value;
+      saveState(state);
+    });
+    tdOwner.appendChild(sel);
+    tr.appendChild(tdOwner);
 
-  {
-    from:"d_approve", to:"n_adjust",
-    fromAnchor:"top", toAnchor:"bottom",
-    text:"NO", style:{ stroke:"rgba(239,68,68,.9)", marker:"arrowNo", width:"3" }, dy:-10
-  },
-  {
-    from:"n_adjust", to:"n_serp",
-    fromAnchor:"bottom", toAnchor:"top",
-    style:{ stroke:"rgba(239,68,68,.65)", marker:"arrowNo", width:"2.5" }
-  },
-  {
-    from:"d_approve", to:"n_ast",
-    fromAnchor:"right", toAnchor:"left",
-    text:"SÍ", style:{ stroke:"rgba(34,197,94,.9)", marker:"arrowYes", width:"3" }, dy:-10
-  },
-  { from:"n_ast", to:"n_go", fromAnchor:"right", toAnchor:"left" },
-];
+    // rs brands
+    tr.appendChild(tdInput(idx, "rs", r.rs));
+    // lco brands
+    tr.appendChild(tdInput(idx, "lco", r.lco));
 
-const roadmapConnections = [
-  { from:"r0", to:"r1", fromAnchor:"right", toAnchor:"left" },
-  { from:"r1", to:"r2", fromAnchor:"right", toAnchor:"left" },
-  { from:"r2", to:"r3", fromAnchor:"right", toAnchor:"left" },
-  { from:"r3", to:"r4", fromAnchor:"right", toAnchor:"left" },
-];
+    // goal
+    const tdGoal = document.createElement("td");
+    const goal = document.createElement("select");
+    goal.className = "select";
+    ["Top 1","Top 3","Top 5"].forEach(opt => {
+      const o = document.createElement("option");
+      o.value = opt;
+      o.textContent = opt;
+      if(opt === r.goal) o.selected = true;
+      goal.appendChild(o);
+    });
+    goal.addEventListener("change", () => {
+      state.ownership[idx].goal = goal.value;
+      saveState(state);
+    });
+    tdGoal.appendChild(goal);
+    tr.appendChild(tdGoal);
 
-function renderAll(){
-  renderConnections("checklistDiagram", "checklistSvg", checklistConnections);
-  renderConnections("roadmapDiagram", "roadmapSvg", roadmapConnections);
+    body.appendChild(tr);
+  });
+
+  function tdText(text){
+    const td = document.createElement("td");
+    td.textContent = text;
+    return td;
+  }
+  function tdInput(idx, key, val){
+    const td = document.createElement("td");
+    const inp = document.createElement("input");
+    inp.className = "input";
+    inp.value = val || "";
+    inp.addEventListener("input", () => {
+      state.ownership[idx][key] = inp.value;
+      saveState(state);
+    });
+    td.appendChild(inp);
+    return td;
+  }
 }
 
-window.addEventListener("load", renderAll);
-window.addEventListener("resize", () => {
-  clearTimeout(window.__rt);
-  window.__rt = setTimeout(renderAll, 80);
+/** ====== ROADMAP ====== */
+function renderRoadmap(){
+  const rm = document.getElementById("rmBody");
+  rm.innerHTML = "";
+
+  roadmapRows.forEach(r => {
+    const row = document.createElement("div");
+    row.className = "rmRow";
+
+    const name = document.createElement("div");
+    name.className = "rmName";
+    name.textContent = r.name;
+    row.appendChild(name);
+
+    r.cells.forEach(c => {
+      const cell = document.createElement("div");
+      cell.className = "cell";
+      cell.textContent = c;
+      row.appendChild(cell);
+    });
+
+    rm.appendChild(row);
+  });
+}
+
+/** ====== GATES + PROGRESS ====== */
+function updateGatesAndProgress(){
+  const allItems = checklistData.flatMap(s => s.items);
+  const done = allItems.filter(i => state.checks[i.id]).length;
+  const pct = Math.round((done / allItems.length) * 100);
+
+  document.getElementById("progressBar").style.width = `${pct}%`;
+  document.getElementById("progressText").textContent = `${pct}%`;
+
+  // Gate 0: all required items are checked
+  const required = allItems.filter(i => i.required);
+  const gate0Ready = required.every(i => !!state.checks[i.id]);
+
+  // Gate 1: gate0 + ownershipApproved
+  const gate1Ready = gate0Ready && !!state.ownershipApproved;
+
+  // Gate 2: gate1 + backlogReady
+  const gate2Ready = gate1Ready && !!state.backlogReady;
+
+  paintChip("gate0", gate0Ready);
+  paintChip("gate1", gate1Ready);
+  paintChip("gate2", gate2Ready);
+
+  function paintChip(id, ok){
+    const el = document.getElementById(id);
+    el.style.borderColor = ok ? "rgba(34,197,94,.75)" : "rgba(239,68,68,.65)";
+    el.style.background = ok ? "rgba(34,197,94,.18)" : "rgba(239,68,68,.14)";
+    el.textContent = `${id.toUpperCase()} ${ok ? "LISTO" : "PENDIENTE"}`;
+  }
+}
+
+/** ====== RESET ====== */
+document.getElementById("btnReset").addEventListener("click", () => {
+  if(!confirm("¿Resetear checklist y mapa?")) return;
+  localStorage.removeItem(STORAGE_KEY);
+  state = loadState();
+  renderChecklist();
+  renderOwnership();
+  renderRoadmap();
+  updateGatesAndProgress();
 });
+
+/** ====== INIT ====== */
+renderChecklist();
+renderOwnership();
+renderRoadmap();
+updateGatesAndProgress();
