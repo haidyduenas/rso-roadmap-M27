@@ -83,7 +83,10 @@ const ownershipRows = [
   { cat: "Smartwatch", owner: "RadioShack", rs: "JBL, Sony", lco: "Genérico", goal: "Top 3" },
   { cat: "Consolas", owner: "RadioShack", rs: "PlayStation, Xbox", lco: "—", goal: "Top 1" },
   { cat: "Celulares", owner: "LCO", rs: "Accesorios / gadgets", lco: "Samsung, Xiaomi, Apple", goal: "Top 1" },
-  { cat: "Laptops", owner: "Compartido", rs: "Cables, cargadores, smartwatches", lco: "Accesorios masivos", goal: "Top 3" },
+  { cat: "Laptops", owner: "Compartido", rs: "Acer, Apple", lco: "Accesorios masivos", goal: "Top 3" },
+  { cat: "Teclado", owner: "RadioShack", rs: "JBL, Sony", lco: "Genérico", goal: "Top 3" },
+  { cat: "Mouse", owner: "RadioShack", rs: "JBL, Sony", lco: "Genérico", goal: "Top 3" },
+  { cat: "Sillas gamer", owner: "LCO", rs: "Radioshack", lco: "Genérico", goal: "Top 3" },
 ];
 
 const roadmapRows = [
