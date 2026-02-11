@@ -358,9 +358,9 @@ function updateGatesAndProgress() {
   // Hito 2: gate1 + backlogReady
   const gate2Ready = gate1Ready && !!state.backlogReady;
 
-  paintChip("gate0", gate0Ready);
-  paintChip("gate1", gate1Ready);
-  paintChip("gate2", gate2Ready);
+  paintChip("Hito 0", gate0Ready);
+  paintChip("Hito 1", gate1Ready);
+  paintChip("Hito 2", gate2Ready);
 }
 
 /** ====== RESET ====== */
