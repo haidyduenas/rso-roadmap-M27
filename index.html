@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>RSO Control Tower: Checklist + Ownership + Roadmap</title>
+  <title>RSO Control Tower — RadioShack SEO M27</title>
   <link rel="stylesheet" href="./assets/styles.css" />
 </head>
 
@@ -13,7 +13,7 @@
       <div>
         <h1>RSO Control Tower — RadioShack SEO M27</h1>
         <p class="sub">
-          Vista ejecutiva y operativa: <b>Checklist (DoR)</b> → <b>SERP Ownership (RSO vs LCO)</b> → <b>Roadmap por workstreams</b>.
+          <b>Pestaña 1:</b> Insumos & Ownership · <b>Pestaña 2:</b> Roadmap por workstreams.
         </p>
       </div>
 
@@ -23,80 +23,95 @@
       </div>
     </header>
 
-    <section class="grid">
-      <!-- PANEL A: CHECKLIST / GATES -->
+    <!-- Tabs -->
+    <nav class="tabs" role="tablist" aria-label="RSO Tabs">
+      <button class="tab is-active" role="tab" aria-selected="true" data-tab="tab_inputs">
+        Insumos & Ownership
+      </button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="tab_roadmap">
+        Roadmap M27
+      </button>
+    </nav>
+
+    <!-- TAB 1 -->
+    <section id="tab_inputs" class="tabPanel is-active" role="tabpanel">
+      <section class="grid">
+        <!-- PANEL A: CHECKLIST / Hitos -->
+        <div class="panel">
+          <div class="panelHead">
+            <div>
+              <div class="panelTitle">Checklist de insumos (Definition of Ready)</div>
+              <div class="panelHint">Marca lo recibido. Los hitos se calculan solos.</div>
+            </div>
+            <div class="chips">
+              <span class="chip" id="gate0">Hito 0</span>
+              <span class="chip" id="gate1">Hito 1</span>
+              <span class="chip" id="gate2">Hito 2</span>
+            </div>
+          </div>
+
+          <div class="progress">
+            <div class="bar"><div id="progressBar" class="barFill"></div></div>
+            <div class="progressMeta">
+              <span id="progressText">0%</span>
+              <span class="muted">Completitud total</span>
+            </div>
+          </div>
+
+          <div id="checklistMount" class="checklist"></div>
+
+          <div class="gatesBox">
+            <label class="toggleRow">
+              <input type="checkbox" id="ownershipApproved" />
+              <span><b>Hito 1:</b> Ownership aprobado (Comercial + Marketing)</span>
+            </label>
+
+            <label class="toggleRow">
+              <input type="checkbox" id="backlogReady" />
+              <span><b>Hito 2:</b> Backlog final priorizado + fechas acordadas</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- PANEL B: OWNERSHIP -->
+        <div class="panel">
+          <div class="panelHead">
+            <div>
+              <div class="panelTitle">Mapa SERP Ownership (RS vs LCO)</div>
+              <div class="panelHint">Una tabla = una decisión. Evita canibalización.</div>
+            </div>
+            <div class="smallNote">Piloto: El Salvador</div>
+          </div>
+
+          <div class="tableWrap">
+            <table class="ownTable">
+              <thead>
+                <tr>
+                  <th>Categoría</th>
+                  <th>Owner</th>
+                  <th>Marcas foco RadioShack</th>
+                  <th>Marcas foco LCO</th>
+                  <th>Meta</th>
+                </tr>
+              </thead>
+              <tbody id="ownBody"></tbody>
+            </table>
+          </div>
+
+          <div class="muted foot">
+            Tip: si es “Compartido”, definí roles distintos (RS = experto / LCO = amplitud).
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <!-- TAB 2 -->
+    <section id="tab_roadmap" class="tabPanel" role="tabpanel">
       <div class="panel">
         <div class="panelHead">
           <div>
-            <div class="panelTitle">1) Checklist de insumos (Definition of Ready)</div>
-            <div class="panelHint">Marca los insumos recibidos. Los gates se calculan solos.</div>
-          </div>
-          <div class="chips">
-            <span class="chip" id="gate0">Hito 0</span>
-            <span class="chip" id="gate1">Hito 1</span>
-            <span class="chip" id="gate2">Hito 2</span>
-          </div>
-        </div>
-
-        <div class="progress">
-          <div class="bar"><div id="progressBar" class="barFill"></div></div>
-          <div class="progressMeta">
-            <span id="progressText">0%</span>
-            <span class="muted">Completitud total</span>
-          </div>
-        </div>
-
-        <div id="checklistMount" class="checklist"></div>
-
-        <div class="gatesBox">
-          <label class="toggleRow">
-            <input type="checkbox" id="ownershipApproved" />
-            <span><b>Aprobación Gate 1:</b> SERP Ownership validado por Comercial + Marketing</span>
-          </label>
-
-          <label class="toggleRow">
-            <input type="checkbox" id="backlogReady" />
-            <span><b>Aprobación Gate 2:</b> Backlog final priorizado (Impacto/Esfuerzo) + fechas acordadas</span>
-          </label>
-        </div>
-      </div>
-
-      <!-- PANEL B: SERP OWNERSHIP MAP -->
-      <div class="panel">
-        <div class="panelHead">
-          <div>
-            <div class="panelTitle">2) Mapa SERP Ownership (RSO vs LCO)</div>
-            <div class="panelHint">Una tabla = una decisión. Evita canibalización y alinea prioridades.</div>
-          </div>
-          <div class="smallNote">Piloto: El Salvador</div>
-        </div>
-
-        <div class="tableWrap">
-          <table class="ownTable" id="ownTable">
-            <thead>
-              <tr>
-                <th>Categoría</th>
-                <th>Owner</th>
-                <th>Marcas foco RadioShack</th>
-                <th>Marcas foco LCO</th>
-                <th>Meta</th>
-              </tr>
-            </thead>
-            <tbody id="ownBody"></tbody>
-          </table>
-        </div>
-
-        <div class="muted foot">
-          Tip: si una categoría es “Compartido”, definí roles distintos (ej. RSO = “gaming/audio experto”, LCO = “variedad/precio”).
-        </div>
-      </div>
-
-      <!-- PANEL C: ROADMAP -->
-      <div class="panel span2">
-        <div class="panelHead">
-          <div>
-            <div class="panelTitle">3) Roadmap M27 por workstreams</div>
-            <div class="panelHint">Timeline por trimestres, pero ejecutable (sin flechas). Cambiá textos según país.</div>
+            <div class="panelTitle">Roadmap M27 por workstreams</div>
+            <div class="panelHint">Timeline ejecutable (sin flechas). Ajustable por país.</div>
           </div>
           <div class="smallNote">Abr 2026 – Mar 2027</div>
         </div>
