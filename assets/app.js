@@ -336,13 +336,17 @@ function updateGatesAndProgress(){
   paintChip("gate1", gate1Ready);
   paintChip("gate2", gate2Ready);
 
-  function paintChip(id, ok){
-    const el = document.getElementById(id);
-    el.style.borderColor = ok ? "rgba(34,197,94,.75)" : "rgba(239,68,68,.65)";
-    el.style.background = ok ? "rgba(34,197,94,.18)" : "rgba(239,68,68,.14)";
-    el.textContent = `${id.toUpperCase()} ${ok ? "LISTO" : "PENDIENTE"}`;
-  }
+function paintChip(id, ok){
+  const el = document.getElementById(id);
+
+  // OK = gris (estable), PENDIENTE = rojo (alerta)
+  el.style.borderColor = ok ? "rgba(211,211,211,.55)" : "rgba(225,6,0,.75)";
+  el.style.background  = ok ? "rgba(211,211,211,.10)" : "rgba(225,6,0,.14)";
+  el.style.color       = ok ? "rgba(211,211,211,.95)" : "rgba(211,211,211,.95)";
+
+  el.textContent = `${id.toUpperCase()} ${ok ? "LISTO" : "PENDIENTE"}`;
 }
+
 
 /** ====== RESET ====== */
 document.getElementById("btnReset").addEventListener("click", () => {
