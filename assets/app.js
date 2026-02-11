@@ -37,7 +37,7 @@ const checklistData = [
     ],
   },
   {
-    team: "Comercial",
+    team: "Comercial/ País",
     mustHave: 3,
     items: [
       { id: "c_own", label: "Prioridad RS vs LCO por categoría/marca (ownership)", required: true },
@@ -47,7 +47,7 @@ const checklistData = [
     ],
   },
   {
-    team: "Catálogo / Merch",
+    team: "Responsable: Por definir",
     mustHave: 2,
     items: [
       { id: "k_inv", label: "Inventario actual por categoría/marca", required: true },
@@ -59,8 +59,8 @@ const checklistData = [
     team: "IT / Producto",
     mustHave: 1,
     items: [
-      { id: "i_cap", label: "Capacidades (PLP/PDP/filtros/módulos) + límites", required: true },
-      { id: "i_rel", label: "Ventanas de release + responsables", required: false },
+      { id: "i_cap", label: "Nuevo template de PDP", required: true },
+      { id: "i_rel", label: "Habilitación de atributos para descripción en PDP", required: false },
     ],
   },
   {
