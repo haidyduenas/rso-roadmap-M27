@@ -77,10 +77,13 @@ const checklistData = [
 
 const ownershipRows = [
   { cat: "Televisores", owner: "RadioShack", rs: "TCL, Sony", lco: "Samsung, LG", goal: "Top 3" },
-  { cat: "Audio", owner: "RadioShack", rs: "JBL, Sony", lco: "Genérico", goal: "Top 3" },
+  { cat: "Parlantes", owner: "RadioShack", rs: "JBL, Sony", lco: "Genérico", goal: "Top 3" },
+  { cat: "Audifonos", owner: "RadioShack", rs: "JBL, Sony", lco: "Genérico", goal: "Top 3" },
+  { cat: "Smarhome", owner: "RadioShack", rs: "JBL, Sony", lco: "Genérico", goal: "Top 3" },
+  { cat: "Smartwatch", owner: "RadioShack", rs: "JBL, Sony", lco: "Genérico", goal: "Top 3" },
   { cat: "Consolas", owner: "RadioShack", rs: "PlayStation, Xbox", lco: "—", goal: "Top 1" },
   { cat: "Celulares", owner: "LCO", rs: "Accesorios / gadgets", lco: "Samsung, Xiaomi, Apple", goal: "Top 1" },
-  { cat: "Accesorios", owner: "Compartido", rs: "Cables, cargadores, smartwatches", lco: "Accesorios masivos", goal: "Top 3" },
+  { cat: "Laptops", owner: "Compartido", rs: "Cables, cargadores, smartwatches", lco: "Accesorios masivos", goal: "Top 3" },
 ];
 
 const roadmapRows = [
@@ -95,11 +98,11 @@ const roadmapRows = [
     ],
   },
   {
-    name: "AST (Landings transacc.)",
+    name: "AST (Landings transaccionales)",
     cells: [
-      "Mapa AST v1 (20–40 clusters ES)",
-      "10–15 landings AST ES (marca/categoría/atributo)",
-      "Escala a 60–80 clusters en 2 países",
+      "Mapa Arquitectura SEO Transaccional v1 (50 clusters ES)",
+      "25 landings AST ES (marca/categoría/atributo)",
+      "25 landings AST ES (marca/categoría/atributo)",
       "Hubs BF/Cyber por marca/categoría",
       "Consolidar winners + retirar losers",
     ],
@@ -118,7 +121,7 @@ const roadmapRows = [
     name: "Optimización para IA",
     cells: [
       "Revisión acceso de bots",
-      "Habilitar preguntas frecuentes",
+      "Habilitar preguntas frecuentes / Contenido semántico",
       "",
       "",      
       "Revisión perfil backlinks + continuidad",
