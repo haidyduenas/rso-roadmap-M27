@@ -1,3 +1,9 @@
+// ============================
+// RSO Control Tower — app.js
+// ============================
+
+const STORAGE_KEY = "rso_control_tower_v1";
+
 // ===== Tabs =====
 function initTabs() {
   const tabs = Array.from(document.querySelectorAll(".tab"));
@@ -19,10 +25,8 @@ function initTabs() {
   tabs.forEach(t => t.addEventListener("click", () => setActive(t.dataset.tab)));
 
   const saved = localStorage.getItem(key);
-  setActive(saved && document.getElementById(saved) ? saved : "tab_inputs");
+  setActive(saved && document.getElementById(saved) ? saved : "tab_status");
 }
-
-const STORAGE_KEY = "rso_control_tower_v1";
 
 /** ====== DATA ====== */
 const checklistData = [
@@ -78,15 +82,15 @@ const checklistData = [
 const ownershipRows = [
   { cat: "Televisores", owner: "RadioShack", rs: "TCL, Sony", lco: "Samsung, LG", goal: "Top 3" },
   { cat: "Parlantes", owner: "RadioShack", rs: "JBL, Sony", lco: "Genérico", goal: "Top 3" },
-  { cat: "Audifonos", owner: "RadioShack", rs: "JBL, Sony", lco: "Genérico", goal: "Top 3" },
-  { cat: "Smarhome", owner: "RadioShack", rs: "JBL, Sony", lco: "Genérico", goal: "Top 3" },
+  { cat: "Audífonos", owner: "RadioShack", rs: "JBL, Sony", lco: "Genérico", goal: "Top 3" },
+  { cat: "Smart home", owner: "RadioShack", rs: "JBL, Sony", lco: "Genérico", goal: "Top 3" },
   { cat: "Smartwatch", owner: "RadioShack", rs: "JBL, Sony", lco: "Genérico", goal: "Top 3" },
   { cat: "Consolas", owner: "RadioShack", rs: "PlayStation, Xbox", lco: "—", goal: "Top 1" },
   { cat: "Celulares", owner: "LCO", rs: "Accesorios / gadgets", lco: "Samsung, Xiaomi, Apple", goal: "Top 1" },
   { cat: "Laptops", owner: "Compartido", rs: "Acer, Apple", lco: "Accesorios masivos", goal: "Top 3" },
-  { cat: "Teclado", owner: "RadioShack", rs: "JBL, Sony", lco: "Genérico", goal: "Top 3" },
-  { cat: "Mouse", owner: "RadioShack", rs: "JBL, Sony", lco: "Genérico", goal: "Top 3" },
-  { cat: "Sillas gamer", owner: "LCO", rs: "Radioshack", lco: "Genérico", goal: "Top 3" },
+  { cat: "Teclados", owner: "RadioShack", rs: "Genérico", lco: "Genérico", goal: "Top 3" },
+  { cat: "Mouse", owner: "RadioShack", rs: "Genérico", lco: "Genérico", goal: "Top 3" },
+  { cat: "Sillas gamer", owner: "LCO", rs: "RadioShack", lco: "Genérico", goal: "Top 3" },
 ];
 
 const roadmapRows = [
@@ -126,7 +130,7 @@ const roadmapRows = [
       "Revisión acceso de bots",
       "Habilitar preguntas frecuentes / Contenido semántico",
       "",
-      "",      
+      "",
       "Revisión perfil backlinks + continuidad",
     ],
   },
@@ -146,9 +150,29 @@ const roadmapRows = [
 function loadState() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw
-      ? JSON.parse(raw)
-      : { checks: {}, ownershipApproved: false, backlogReady: false, ownership: ownershipRows };
+    const saved = raw ? JSON.parse(raw) : null;
+
+    const base = {
+      checks: {},
+      ownershipApproved: false,
+      backlogReady: false,
+      ownership: ownershipRows,
+    };
+
+    if (!saved) return base;
+
+    // merge ownership (si agregas categorías nuevas en el código, no se pierden)
+    const savedCats = new Set((saved.ownership || []).map(x => x.cat));
+    const mergedOwnership = [
+      ...(saved.ownership || []),
+      ...ownershipRows.filter(x => !savedCats.has(x.cat)),
+    ];
+
+    return {
+      ...base,
+      ...saved,
+      ownership: mergedOwnership,
+    };
   } catch {
     return { checks: {}, ownershipApproved: false, backlogReady: false, ownership: ownershipRows };
   }
@@ -163,11 +187,14 @@ function paintChip(id, ok) {
   const el = document.getElementById(id);
   if (!el) return;
 
-  // OK = gris (estable), PENDIENTE = rojo (alerta)
-  el.style.borderColor = ok ? "rgba(211,211,211,.55)" : "rgba(225,6,0,.75)";
-  el.style.background = ok ? "rgba(211,211,211,.10)" : "rgba(225,6,0,.14)";
-  el.style.color = "rgba(211,211,211,.95)";
-  el.textContent = `${id.toUpperCase()} ${ok ? "LISTO" : "PENDIENTE"}`;
+  const labelMap = { gate0: "Hito 0", gate1: "Hito 1", gate2: "Hito 2" };
+  const label = labelMap[id] || "Hito";
+
+  // LISTO = verde suave, PENDIENTE = rojo suave
+  el.style.borderColor = ok ? "rgba(32,192,92,.45)" : "rgba(218,40,28,.55)";
+  el.style.background = ok ? "rgba(32,192,92,.12)" : "rgba(218,40,28,.10)";
+  el.style.color = "rgba(16,18,20,.88)";
+  el.textContent = `${label} ${ok ? "LISTO" : "PENDIENTE"}`;
 }
 
 /** ====== RENDER CHECKLIST ====== */
@@ -220,7 +247,6 @@ function renderChecklist() {
     mount.appendChild(sec);
   });
 
-  // toggles
   const ownCb = document.getElementById("ownershipApproved");
   const backCb = document.getElementById("backlogReady");
 
@@ -253,12 +279,10 @@ function renderOwnership() {
   state.ownership.forEach((r, idx) => {
     const tr = document.createElement("tr");
 
-    // categoría
     const tdCat = document.createElement("td");
     tdCat.textContent = r.cat;
     tr.appendChild(tdCat);
 
-    // owner
     const tdOwner = document.createElement("td");
     const sel = document.createElement("select");
     sel.className = "select";
@@ -276,12 +300,9 @@ function renderOwnership() {
     tdOwner.appendChild(sel);
     tr.appendChild(tdOwner);
 
-    // rs
     tr.appendChild(tdInput(idx, "rs", r.rs));
-    // lco
     tr.appendChild(tdInput(idx, "lco", r.lco));
 
-    // goal
     const tdGoal = document.createElement("td");
     const goal = document.createElement("select");
     goal.className = "select";
@@ -343,7 +364,7 @@ function renderRoadmap() {
   });
 }
 
-/** ====== GATES + PROGRESS ====== */
+/** ====== HITOS + PROGRESS ====== */
 function updateGatesAndProgress() {
   const allItems = checklistData.flatMap(s => s.items);
   const done = allItems.filter(i => state.checks[i.id]).length;
@@ -354,14 +375,14 @@ function updateGatesAndProgress() {
   if (bar) bar.style.width = `${pct}%`;
   if (txt) txt.textContent = `${pct}%`;
 
-  // Hito 0: todos los required marcados
+  // Hito 0: required completado
   const required = allItems.filter(i => i.required);
   const gate0Ready = required.every(i => !!state.checks[i.id]);
 
-  // Hito 1: gate0 + ownershipApproved
+  // Hito 1: Hito 0 + ownershipApproved
   const gate1Ready = gate0Ready && !!state.ownershipApproved;
 
-  // Hito 2: gate1 + backlogReady
+  // Hito 2: Hito 1 + backlogReady
   const gate2Ready = gate1Ready && !!state.backlogReady;
 
   paintChip("gate0", gate0Ready);
