@@ -4,6 +4,52 @@
 
 const STORAGE_KEY = "rso_control_tower_v1";
 
+/** ====== STATUS (Snapshot) ====== */
+const statusData = {
+  country: "RSO SV",
+  period: "Abr 2025 – Ene 2026",
+  search: [
+    { label: "Impresiones", value: "1,070,000" },
+    { label: "Clics", value: "639,000" },
+    { label: "Posición promedio", value: "6.0" },
+    { label: "Posición (sin marca)", value: "6.4" },
+    { label: "Posición (con marca)", value: "1.1" },
+  ],
+  funnel: [
+    { label: "Visitas", value: "715,875" },
+    { label: "Add to cart", value: "1.93%", tone: "ok" },
+    { label: "Orders", value: "1,495" },
+    { label: "Conversion rate", value: "0.21%", tone: "warn" },
+  ],
+  business: [
+    { label: "Ticket promedio", value: "$234" },
+    { label: "Venta", value: "$350,400", tone: "ok" },
+    { label: "Participación del Digital (Paid + Non-paid)", value: "26%" },
+    { label: "Participación del Total (Digital + Venta asistida)", value: "14%" },
+  ],
+};
+
+function kpiCard(item) {
+  const tone = item.tone || "base"; // base | ok | warn
+  return `
+    <div class="kpiCard ${tone}">
+      <div class="kpiLabel">${item.label}</div>
+      <div class="kpiValue">${item.value}</div>
+    </div>
+  `;
+}
+
+function renderStatus() {
+  const s = document.getElementById("statusSearch");
+  const f = document.getElementById("statusFunnel");
+  const b = document.getElementById("statusBiz");
+  if (!s || !f || !b) return;
+
+  s.innerHTML = statusData.search.map(kpiCard).join("");
+  f.innerHTML = statusData.funnel.map(kpiCard).join("");
+  b.innerHTML = statusData.business.map(kpiCard).join("");
+}
+
 // ===== Tabs =====
 function initTabs() {
   const tabs = Array.from(document.querySelectorAll(".tab"));
@@ -100,7 +146,7 @@ const roadmapRows = [
       "Definir reglas URLs + plan backlinks",
       "Cleanup backlinks + pruning URLs sin producto",
       "Ajustes PLP indexación + monitoreo cobertura",
-      "Hardening para temporada alta",
+      "Blindaje para temporada alta",
       "Limpieza anual + fixes recurrentes",
     ],
   },
@@ -152,27 +198,16 @@ function loadState() {
     const raw = localStorage.getItem(STORAGE_KEY);
     const saved = raw ? JSON.parse(raw) : null;
 
-    const base = {
-      checks: {},
-      ownershipApproved: false,
-      backlogReady: false,
-      ownership: ownershipRows,
-    };
-
+    const base = { checks: {}, ownershipApproved: false, backlogReady: false, ownership: ownershipRows };
     if (!saved) return base;
 
-    // merge ownership (si agregas categorías nuevas en el código, no se pierden)
     const savedCats = new Set((saved.ownership || []).map(x => x.cat));
     const mergedOwnership = [
       ...(saved.ownership || []),
       ...ownershipRows.filter(x => !savedCats.has(x.cat)),
     ];
 
-    return {
-      ...base,
-      ...saved,
-      ownership: mergedOwnership,
-    };
+    return { ...base, ...saved, ownership: mergedOwnership };
   } catch {
     return { checks: {}, ownershipApproved: false, backlogReady: false, ownership: ownershipRows };
   }
@@ -190,10 +225,14 @@ function paintChip(id, ok) {
   const labelMap = { gate0: "Hito 0", gate1: "Hito 1", gate2: "Hito 2" };
   const label = labelMap[id] || "Hito";
 
-  // LISTO = verde suave, PENDIENTE = rojo suave
-  el.style.borderColor = ok ? "rgba(32,192,92,.45)" : "rgba(218,40,28,.55)";
-  el.style.background = ok ? "rgba(32,192,92,.12)" : "rgba(218,40,28,.10)";
-  el.style.color = "rgba(16,18,20,.88)";
+  el.classList.toggle("is-ready", ok);
+  el.classList.toggle("is-pending", !ok);
+
+  // limpiar estilos inline por si venían de una versión vieja
+  el.style.borderColor = "";
+  el.style.background = "";
+  el.style.color = "";
+
   el.textContent = `${label} ${ok ? "LISTO" : "PENDIENTE"}`;
 }
 
@@ -399,6 +438,7 @@ function initReset() {
     if (!confirm("¿Resetear checklist y mapa?")) return;
     localStorage.removeItem(STORAGE_KEY);
     state = loadState();
+    renderStatus();
     renderChecklist();
     renderOwnership();
     renderRoadmap();
@@ -410,6 +450,7 @@ function initReset() {
 window.addEventListener("DOMContentLoaded", () => {
   initTabs();
   initReset();
+  renderStatus();
   renderChecklist();
   renderOwnership();
   renderRoadmap();
