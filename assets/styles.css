@@ -301,3 +301,24 @@ h1{ margin:0; font-size:20px; letter-spacing:.2px; font-weight:900; }
 @media print{
   .actions{ display:none !important; }
 }
+/* Chips: más legibles y “pill” limpio */
+.chip{
+  font-weight: 900;
+  letter-spacing: .2px;
+  border-width: 1.5px;
+  padding: 7px 12px;
+}
+
+/* Estado pendiente (rojo suave) */
+.chip.is-pending{
+  border-color: rgba(218,40,28,.70);
+  background: rgba(218,40,28,.10);
+  color: rgba(16,18,20,.88);
+}
+
+/* Estado listo (verde suave) */
+.chip.is-ready{
+  border-color: rgba(32,192,92,.55);
+  background: rgba(32,192,92,.12);
+  color: rgba(16,18,20,.88);
+}
