@@ -44,46 +44,53 @@
 
     <!-- TAB 0: STATUS -->
     <section id="tab_status" class="tabPanel is-active" role="tabpanel">
-        <div class="panel statusPanel">
-          <div class="panelHead statusHead">
-            <div>
-              <div class="panelTitle statusTitle">Situación actual — RSO SV</div>
-              <div class="panelHint">Abr 2025 – Ene 2026 · Snapshot ejecutivo</div>
-            </div>
-            <div class="pill">Fuente: GSC + Analytics</div>
+      <div class="panel statusPanel">
+        <div class="panelHead statusHead">
+          <div>
+            <div class="panelTitle statusTitle">Situación actual — RSO SV</div>
+            <div class="panelHint">Abr 2025 – Ene 2026 · Snapshot ejecutivo</div>
           </div>
-        
-          <div class="statusBlocks">
-            <div class="block">
-              <div class="blockTitle">Búsqueda (Google)</div>
-              <div id="statusSearch" class="kpiGrid"></div>
-            </div>
-        
-            <div class="block">
-              <div class="blockTitle">Funnel eCommerce</div>
-              <div id="statusFunnel" class="kpiGrid"></div>
-            </div>
-        
-            <div class="block">
-              <div class="blockTitle">Negocio</div>
-              <div id="statusBiz" class="kpiGrid"></div>
-            </div>
-          </div>
-        
-          <div class="muted foot">
-            Tip: si querés, después lo volvemos multi-país con selector (SV/GT/HN/NI/CR/EC).
+          <div class="pill" title="Definiciones: Digital = Paid + Non-paid · Total = Digital + Venta asistida">
+            Fuente: GSC + Analytics
           </div>
         </div>
+
+        <div class="statusBlocks">
+          <div class="block">
+            <div class="blockTitle">Búsqueda (Google)</div>
+            <div id="statusSearch" class="kpiGrid"></div>
+          </div>
+
+          <div class="block">
+            <div class="blockTitle">Funnel eCommerce</div>
+            <div id="statusFunnel" class="kpiGrid"></div>
+          </div>
+
+          <div class="block">
+            <div class="blockTitle">Negocio</div>
+            <div id="statusBiz" class="kpiGrid"></div>
+
+            <div class="muted foot" style="margin-top:10px;">
+              <b>Definiciones:</b> <span>Digital = Paid + Non-paid</span> ·
+              <span>Total = Digital + Venta asistida</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="muted foot">
+          Tip: si querés, después lo volvemos multi-país con selector (SV/GT/HN/NI/CR/EC).
+        </div>
+      </div>
     </section>
 
-    <!-- TAB 1: INSUMOS -->
+    <!-- TAB 1 -->
     <section id="tab_inputs" class="tabPanel" role="tabpanel">
       <section class="grid">
         <!-- PANEL A: CHECKLIST / Hitos -->
         <div class="panel">
           <div class="panelHead">
             <div>
-              <div class="panelTitle">Checklist de insumos </div>
+              <div class="panelTitle">Checklist de insumos (Definition of Ready)</div>
               <div class="panelHint">Marca lo recibido. Los hitos se calculan solos.</div>
             </div>
             <div class="chips">
@@ -148,7 +155,7 @@
       </section>
     </section>
 
-    <!-- TAB 2: ROADMAP -->
+    <!-- TAB 2 -->
     <section id="tab_roadmap" class="tabPanel" role="tabpanel">
       <div class="panel">
         <div class="panelHead">
