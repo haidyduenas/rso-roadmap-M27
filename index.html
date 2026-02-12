@@ -44,53 +44,36 @@
 
     <!-- TAB 0: STATUS -->
     <section id="tab_status" class="tabPanel is-active" role="tabpanel">
-      <div class="panel statusPanel">
-        <div class="panelHead statusHead">
-          <div>
-            <div class="panelTitle statusTitle">Situación actual</div>
-            <div class="panelHint">Fuente: Google Search Console (Abr 2025 – Ene 2026)</div>
+        <div class="panel statusPanel">
+          <div class="panelHead statusHead">
+            <div>
+              <div class="panelTitle statusTitle">Situación actual — RSO SV</div>
+              <div class="panelHint">Abr 2025 – Ene 2026 · Snapshot ejecutivo</div>
+            </div>
+            <div class="pill">Fuente: GSC + Analytics</div>
           </div>
-          <div class="gBadge" title="Google (referencia)">
-            G
+        
+          <div class="statusBlocks">
+            <div class="block">
+              <div class="blockTitle">Búsqueda (Google)</div>
+              <div id="statusSearch" class="kpiGrid"></div>
+            </div>
+        
+            <div class="block">
+              <div class="blockTitle">Funnel eCommerce</div>
+              <div id="statusFunnel" class="kpiGrid"></div>
+            </div>
+        
+            <div class="block">
+              <div class="blockTitle">Negocio</div>
+              <div id="statusBiz" class="kpiGrid"></div>
+            </div>
           </div>
-        </div>
-
-        <div class="statusGrid">
-          <div class="statusCard">
-            <div class="statusLabel">Posición media</div>
-            <div class="statusValue ok">4.7</div>
-          </div>
-
-          <div class="statusCard">
-            <div class="statusLabel">Posición media (con marca)</div>
-            <div class="statusValue ok">1.5</div>
-          </div>
-
-          <div class="statusCard">
-            <div class="statusLabel">Posición media (sin marca)</div>
-            <div class="statusValue ok">4</div>
-          </div>
-        </div>
-
-        <div class="statusStats">
-          <div class="statRow">
-            <div class="statName">Visitas (Abr 2025 – Ene 2026)</div>
-            <div class="statVal">743,162</div>
-          </div>
-          <div class="statRow">
-            <div class="statName">Órdenes (Abr 2025 – Ene 2026)</div>
-            <div class="statVal">1,533</div>
-          </div>
-          <div class="statRow">
-            <div class="statName">Conversión (Abr 2025 – Ene 2026)</div>
-            <div class="statVal">0.21%</div>
+        
+          <div class="muted foot">
+            Tip: si querés, después lo volvemos multi-país con selector (SV/GT/HN/NI/CR/EC).
           </div>
         </div>
-
-        <div class="muted foot">
-          Nota: este panel es “snapshot” ejecutivo. Si querés, lo conectamos luego a CSV/JSON para actualizarlo sin editar HTML.
-        </div>
-      </div>
     </section>
 
     <!-- TAB 1: INSUMOS -->
