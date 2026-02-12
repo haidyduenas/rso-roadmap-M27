@@ -355,6 +355,12 @@ h1{ margin:0; font-size:20px; letter-spacing:.2px; font-weight:900; }
   gap:12px;
 }
 
+/* Solo este bloque (5) */
+.kpiGrid--5{
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+
 .kpiCard{
   background:#fff;
   border:1px solid rgba(16,18,20,.10);
