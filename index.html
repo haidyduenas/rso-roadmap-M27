@@ -4,6 +4,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>RSO Control Tower — RadioShack SEO M27</title>
+
+  <!-- Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="./assets/styles.css" />
 </head>
 
@@ -13,7 +19,7 @@
       <div>
         <h1>RSO Control Tower — RadioShack SEO M27</h1>
         <p class="sub">
-          <b>Pestaña 1:</b> Insumos & Ownership · <b>Pestaña 2:</b> Roadmap por workstreams.
+          <b>Pestaña 1:</b> Status actual · <b>Pestaña 2:</b> Insumos & Ownership · <b>Pestaña 3:</b> Roadmap.
         </p>
       </div>
 
@@ -25,7 +31,10 @@
 
     <!-- Tabs -->
     <nav class="tabs" role="tablist" aria-label="RSO Tabs">
-      <button class="tab is-active" role="tab" aria-selected="true" data-tab="tab_inputs">
+      <button class="tab is-active" role="tab" aria-selected="true" data-tab="tab_status">
+        Status actual
+      </button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="tab_inputs">
         Insumos & Ownership
       </button>
       <button class="tab" role="tab" aria-selected="false" data-tab="tab_roadmap">
@@ -33,8 +42,59 @@
       </button>
     </nav>
 
-    <!-- TAB 1 -->
-    <section id="tab_inputs" class="tabPanel is-active" role="tabpanel">
+    <!-- TAB 0: STATUS -->
+    <section id="tab_status" class="tabPanel is-active" role="tabpanel">
+      <div class="panel statusPanel">
+        <div class="panelHead statusHead">
+          <div>
+            <div class="panelTitle statusTitle">Situación actual</div>
+            <div class="panelHint">Fuente: Google Search Console (Abr 2025 – Ene 2026)</div>
+          </div>
+          <div class="gBadge" title="Google (referencia)">
+            G
+          </div>
+        </div>
+
+        <div class="statusGrid">
+          <div class="statusCard">
+            <div class="statusLabel">Posición media</div>
+            <div class="statusValue ok">4.7</div>
+          </div>
+
+          <div class="statusCard">
+            <div class="statusLabel">Posición media (con marca)</div>
+            <div class="statusValue ok">1.5</div>
+          </div>
+
+          <div class="statusCard">
+            <div class="statusLabel">Posición media (sin marca)</div>
+            <div class="statusValue ok">4</div>
+          </div>
+        </div>
+
+        <div class="statusStats">
+          <div class="statRow">
+            <div class="statName">Visitas (Abr 2025 – Ene 2026)</div>
+            <div class="statVal">743,162</div>
+          </div>
+          <div class="statRow">
+            <div class="statName">Órdenes (Abr 2025 – Ene 2026)</div>
+            <div class="statVal">1,533</div>
+          </div>
+          <div class="statRow">
+            <div class="statName">Conversión (Abr 2025 – Ene 2026)</div>
+            <div class="statVal">0.21%</div>
+          </div>
+        </div>
+
+        <div class="muted foot">
+          Nota: este panel es “snapshot” ejecutivo. Si querés, lo conectamos luego a CSV/JSON para actualizarlo sin editar HTML.
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 1: INSUMOS -->
+    <section id="tab_inputs" class="tabPanel" role="tabpanel">
       <section class="grid">
         <!-- PANEL A: CHECKLIST / Hitos -->
         <div class="panel">
@@ -105,7 +165,7 @@
       </section>
     </section>
 
-    <!-- TAB 2 -->
+    <!-- TAB 2: ROADMAP -->
     <section id="tab_roadmap" class="tabPanel" role="tabpanel">
       <div class="panel">
         <div class="panelHead">
